@@ -44,31 +44,31 @@ def get_ai_advice(name, age, symptoms):
         return f"Error getting AI advice: {str(e)}"
 @app.post("/api/triage")
 async def triage(req: TriageRequest):
-    # Replace this with real Ollama call when ready
-    # ai_advice = get_ai_advice(req.name, req.age, req.symptoms)
+    prompt = f"""
+    Patient Name: {req.name}
+    Age: {req.age}
+    Symptoms: {req.symptoms}
 
-    # Dummy structured advice for now
-    ai_advice = {
-        "summary": f"Hi {req.name}, based on your symptoms, here is what I suggest.",
-        "recommendations": [
-            "Get plenty of rest.",
-            "Stay hydrated with water and fluids.",
-            "Take over-the-counter meds like paracetamol if feverish.",
-            "Monitor symptoms, and see a doctor if things worsen."
-        ],
-        "follow_up": "If symptoms persist beyond 7 days or worsen, please consult a healthcare professional."
-    }
+    You are a medical triage assistant. Give clear, short, and safe advice about what the patient should do next.
+    Avoid any dangerous or false claims.
+    """
+
+    try:
+        result = subprocess.run(
+            ["ollama", "run", "llama3"],
+            input=prompt.encode(),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=15
+        )
+        ai_advice = result.stdout.decode().strip()
+    except Exception as e:
+        ai_advice = f"Error getting AI advice: {str(e)}"
 
     return JSONResponse({
-        "patient": {
-            "name": req.name,
-            "age": req.age,
-            "symptoms": req.symptoms
-        },
         "advice": ai_advice
     })
 
-# Note: This is a placeholder function. Replace with actual Ollama integration when available.
 # Instructions to run the app:
 # 1. Install dependencies: pip install -r requirements.txt
 # 2. Run the app: uvicorn main:app --reload
