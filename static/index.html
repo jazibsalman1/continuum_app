@@ -1,49 +1,21 @@
-# File: static/index.html
-index_html = r
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Continuum </title>
-    <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial; padding: 24px; max-width:900px; margin:auto }
-      h1 { font-size: 24px }
-      textarea { width:100%; height:120px }
-      .card { border:1px solid #ddd; padding:12px; border-radius:8px; margin-bottom:12px }
-      label { font-weight:600 }
-      button { padding:8px 12px; border-radius:6px }
-      .small { font-size:13px; color:#555 }
-    </style>
-  </head>
-  <body>
-    <h1>Continuum — AI Health Companion (Prototype)</h1>
-    <div class="card">
-      <label for="name">Name</label><br>
-      <input id="name" placeholder="Your name" />
-      <div style="height:8px"></div>
-      <label for="age">Age</label><br>
-      <input id="age" type="number" placeholder="Age" />
-    </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Continuum Health Triage</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>🩺 Health Symptom Triage</h1>
+    <form id="triageForm">
+        <input type="text" id="name" placeholder="Your Name" required><br><br>
+        <input type="number" id="age" placeholder="Your Age" required><br><br>
+        <textarea id="symptoms" placeholder="Describe your symptoms" required></textarea><br><br>
+        <button type="submit">Get Advice</button>
+    </form>
 
-    <div class="card">
-      <label for="symptoms">Describe your symptoms</label>
-      <textarea id="symptoms" placeholder="e.g. fever, cough, headache"></textarea>
-      <div style="height:8px"></div>
-      <button id="triageBtn">Run Triage</button>
-      <button id="teleBtn">Request Teleconsult</button>
-    </div>
+    <h2>AI Advice:</h2>
+    <pre id="result"></pre>
+<script src="/static/app.js"></script>
 
-    <div id="result" class="card small">Results will appear here.</div>
-
-    <div class="card small">
-      <strong>Notes:</strong>
-      <ul>
-        <li>This is a demo prototype. It is NOT medical advice.</li>
-        <li>The triage logic is simplistic and for demonstration only.</li>
-      </ul>
-    </div>
-
-    <script src="/static/app.js"></script>
-  </body>
+</body>
 </html>
