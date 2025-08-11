@@ -1,6 +1,6 @@
 document.getElementById("triageForm").addEventListener("submit", async function(e) {
     e.preventDefault();
-    
+
     const name = document.getElementById("name").value;
     const age = parseInt(document.getElementById("age").value);
     const symptoms = document.getElementById("symptoms").value;
@@ -12,5 +12,16 @@ document.getElementById("triageForm").addEventListener("submit", async function(
     });
 
     const data = await res.json();
-    document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+
+    // Build HTML for advice display
+    const advice = data.advice;
+    let html = `<strong>Summary:</strong> ${advice.summary}<br><br>`;
+    html += `<strong>Recommendations:</strong><ul>`;
+    advice.recommendations.forEach(rec => {
+        html += `<li>${rec}</li>`;
+    });
+    html += `</ul>`;
+    html += `<strong>Follow-up:</strong> ${advice.follow_up}`;
+
+    document.getElementById("result").innerHTML = html;
 });
