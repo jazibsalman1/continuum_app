@@ -31,11 +31,11 @@ async def triage(req: TriageRequest):
 
     try:
         result = subprocess.run(
-            ["ollama", "run", "llama3"],
+            ["ollama", "run", "medllama2"],
             input=prompt.encode(),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            timeout=15
+            timeout=60
         )
         ai_advice = result.stdout.decode().strip()
     except Exception as e:
@@ -48,6 +48,6 @@ async def triage(req: TriageRequest):
 # Instructions to run the app:
 # 1. Install dependencies: pip install -r requirements.txt
 # 2. Run the app: uvicorn main:app --reload
-# 3. Access the app at: http://localhost:8000   
+# 3. Access the app at: http://localhost:8000
 # Run with: uvicorn main:app --reload
 # Access at: http://localhost:8000
