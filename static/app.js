@@ -13,15 +13,5 @@ document.getElementById("triageForm").addEventListener("submit", async function(
 
     const data = await res.json();
 
-    // Build HTML for advice display
-    const advice = data.advice;
-    let html = `<strong>Summary:</strong> ${advice.summary}<br><br>`;
-    html += `<strong>Recommendations:</strong><ul>`;
-    advice.recommendations.forEach(rec => {
-        html += `<li>${rec}</li>`;
-    });
-    html += `</ul>`;
-    html += `<strong>Follow-up:</strong> ${advice.follow_up}`;
-
-    document.getElementById("result").innerHTML = html;
+    document.getElementById("result").textContent = data.advice;
 });

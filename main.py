@@ -20,37 +20,13 @@ class TriageRequest(BaseModel):
     age: int
     symptoms: str
 
-# Function to get AI advice from Ollama llama3 model
-def get_ai_advice(name, age, symptoms):
-    prompt = f"""
-    Patient Name: {name}
-    Age: {age}
-    Symptoms: {symptoms}
 
-    You are a medical triage assistant. 
-    Give clear, short, and safe advice about what the patient should do next.
-    Avoid any dangerous or false claims.
-    """
-
-    try:
-        result = subprocess.run(
-            ["ollama", "run", "llama3"],
-            input=prompt.encode(),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
-        return result.stdout.decode().strip()
-    except Exception as e:
-        return f"Error getting AI advice: {str(e)}"
 @app.post("/api/triage")
 async def triage(req: TriageRequest):
     prompt = f"""
     Patient Name: {req.name}
     Age: {req.age}
     Symptoms: {req.symptoms}
-
-    You are a medical triage assistant. Give clear, short, and safe advice about what the patient should do next.
-    Avoid any dangerous or false claims.
     """
 
     try:
@@ -73,9 +49,5 @@ async def triage(req: TriageRequest):
 # 1. Install dependencies: pip install -r requirements.txt
 # 2. Run the app: uvicorn main:app --reload
 # 3. Access the app at: http://localhost:8000   
-
-
-
 # Run with: uvicorn main:app --reload
 # Access at: http://localhost:8000
-# Static files at: http://localhost:8000/static/
