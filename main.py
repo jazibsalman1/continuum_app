@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
+import subprocess
 
 app = FastAPI()
 
@@ -20,46 +20,50 @@ class TriageRequest(BaseModel):
     age: int
     symptoms: str
 
+# Function to get AI advice from Ollama llama3 model
+def get_ai_advice(name, age, symptoms):
+    prompt = f"""
+    Patient Name: {name}
+    Age: {age}
+    Symptoms: {symptoms}
+
+    You are a medical triage assistant. 
+    Give clear, short, and safe advice about what the patient should do next.
+    Avoid any dangerous or false claims.
+    """
+
+    try:
+        result = subprocess.run(
+            ["ollama", "run", "llama3"],
+            input=prompt.encode(),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        return result.stdout.decode().strip()
+    except Exception as e:
+        return f"Error getting AI advice: {str(e)}"
+
 @app.post("/api/triage")
 async def triage(req: TriageRequest):
-    s = req.symptoms.lower()
-    score = 0
-    reasons = []
-    
-    danger = ['chest pain', 'severe bleeding', 'unconscious', 'no breathing', 'shortness of breath', 'difficulty breathing', 'stroke', 'seizure']
-    for k in danger:
-        if k in s:
-            score += 100
-            reasons.append(f'danger sign: {k}')
-    
-    if 'fever' in s and ('cough' in s or 'breath' in s):
-        score += 50
-        reasons.append('fever with respiratory symptoms')
-    
-    mild = ['headache', 'sore throat', 'runny nose', 'fatigue', 'nausea', 'diarrhea']
-    for m in mild:
-        if m in s:
-            score += 5
-            reasons.append(f'mild: {m}')
-    
-    if req.age >= 65:
-        score += 10
-        reasons.append('age >= 65')
-
-    if score >= 100:
-        disposition = '🚨 Emergency — seek immediate care (call emergency services)'
-    elif score >= 50:
-        disposition = '⚠️ Urgent — request rapid teleconsult'
-    elif score >= 15:
-        disposition = 'ℹ️ Advisory — schedule teleconsult or self-care as appropriate'
-    else:
-        disposition = '✅ Self-care — monitor symptoms, rest, and use verified knowledge hub'
+    ai_advice = get_ai_advice(req.name, req.age, req.symptoms)
 
     return JSONResponse({
-        "score": score,
-        "reasons": reasons,
-        "advice": disposition
+        "name": req.name,
+        "age": req.age,
+        "symptoms": req.symptoms,
+        "advice": ai_advice
     })
+def get_ai_advice(name, age, symptoms):
+    # Dummy advice while Ollama not installed
+    return f"Hi {name}, based on your symptoms '{symptoms}', please rest and drink plenty of fluids."
+# Note: This is a placeholder function. Replace with actual Ollama integration when available.
+# Instructions to run the app:
+# 1. Install dependencies: pip install -r requirements.txt
+# 2. Run the app: uvicorn main:app --reload
+# 3. Access the app at: http://localhost:8000   
+
+
+
 # Run with: uvicorn main:app --reload
 # Access at: http://localhost:8000
 # Static files at: http://localhost:8000/static/

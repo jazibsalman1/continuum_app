@@ -1,0 +1,25 @@
+
+        body {
+            background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #00796b;
+            font-weight: bold;
+        }
+        #result {
+            white-space: pre-wrap;
+            background-color: #f9fbe7;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #cddc39;
+            margin-top: 20px;
+        }
